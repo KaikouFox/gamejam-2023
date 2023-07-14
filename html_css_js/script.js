@@ -6,16 +6,14 @@ let templeImg
 var col = 255;
 var item;
 var items = [];
-var itemTypes = ["wood","stone","animal skin","hay","blood","plant","water","fles"];
+var itemTypes = ["wood","stone","animal_skin","hay","blood","plant","water","fles"];
 let temple;
-let fles_item;
-let ui = true;
 var bos = [];
-var timer = 0;
+var time = [];
 
 function preload() {
   console.log(innerWidth)
-    console.log(innerHeight)
+  console.log(innerHeight)
   img = loadImage('player.png');
   templeImg = loadImage('temple.png')
   wood = loadImage('wood.png');
@@ -35,23 +33,28 @@ function setup() {
   balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.25, 1.0001);
   temple = new Temple()
   frameRate(60);
-  setInterval(Spawn_random_items,random(1500,3000));
+  setInterval(Spawn_random_items,random(1000,2000));
+  setInterval(timer)
   for (i=0;i<9;i++) {
     oak = new Boom(Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50)
     bos.push(oak);
   }
 }
 
+function timer() {
+  time++;
+  return time;
+}
+
 function draw() {
   background(255)
   temple.draw()
   player.update()
+  balk.update()
   for (var i = 0; i < items.length; i++){
     item = items[i];
     item.update()
   }
-  balk.update()
-  document.getElementById("uibutton").onclick = function () { if (ui == false) {ui = true} else {ui = false} };
   for (i=0;i<9;i++) {
     oak=bos[i];
     oak.draw();
@@ -65,7 +68,7 @@ function collision(obj1,obj2) {
     obj1.y + obj1.h > obj2.y
 }
 function Spawn_random_items(){
-    item = new Item(itemTypes[Math.floor(Math.random()*6)],Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50);
+    item = new Item(itemTypes[Math.floor(Math.random()*7)],Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50);
     items.push(item);
   }
 
@@ -83,16 +86,16 @@ function ritual(items, add) {
 }
 
 function keyReleased() {
-  if (key == "p" && collision(player, temple) && player.inv["plant"] > 0 && player.inv["plant"] > 0 && player.inv["fles"]) {
+  if (key == "p" && collision(player, temple) && player.inv["plant"] > 0 && player.inv["water"] > 0 && player.inv["fles"]) {
     ritual("plant-water", 30)
   } else if (key == "k" && collision(player, temple) && player.inv["animal_skin"] > 0 && player.inv["blood"] > 0) {
     ritual("animal_skin-blood", 50)
   } else if (key == "l" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 0 && player.inv["blood"] > 0) {
-    ritual("wood-stone-blood", 50)
-  }  else if (key == "o" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["animal_skin"] > 0 && player.inv["hay"]) {
-    ritual("wood-animal_skin-hay", 50)
+    ritual("animal wood-stone-blood", 50)
+  }  else if (key == "o" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["animal_skin"] > 0 && player.inv[""]) {
+    ritual("animal skin-blood", 50)
   } else if (key == "i" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 2) {
-    ritual("wood-stone", 50)
+    ritual("animal skin-blood", 50)
   }
   return false;
 }
@@ -119,21 +122,6 @@ class Player{
 
   draw() {
     image(img, this.x, this.y, this.w, this.h);
-    if (ui == true) {
-    let keys = Object.keys(this.inv);
-    textSize(32);
-    fill(0);
-    for (var i = 0; i < 8; i++) {
-      var t = keys[i]+": "+this.inv[keys[i]]
-      text(t.toString(), 10, 100 + i * 32)
-    }
-    text("Rituals:", 10, 100 + 32 * 9)
-    text("Give drink: water + plant Key: p", 10, 100 + 32 * 10)
-    text("Give dead animals: skin + blood Key: k", 10, 100 + 32 * 11)
-    text("Give totem: wood + stone + blood Key: l", 10, 100 + 32 * 12)
-    text("Give doll: wood + skin + hay Key: o", 10, 100 + 32 * 13)
-    text("Make fire: wood + stone (at least 3) Key: i", 10, 100 + 32 * 14)
-  }
   }
 
   update() {
@@ -217,7 +205,7 @@ class Item {
     else if (type=="stone") {
       this.ap = stone;
     }
-    else if (type=="animal skin") {
+    else if (type=="animal_skin") {
       this.ap = animal_skin;
     }
     else if (type=="hay") {
