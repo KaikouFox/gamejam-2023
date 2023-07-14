@@ -1,6 +1,7 @@
 let player;
 let balk;
 let img;
+let templeImg
 var col = 255;
 var item;
 var items = [];
@@ -18,7 +19,7 @@ function preload() {
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
-  player = new Player(innerWidth/2-150, innerHeight/2-197, 300/20, 394/20, 2, 2);
+  player = new Player(innerWidth/2-150, innerHeight/2-197, 300/15, 394/15, 2, 2);
   balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.0001);
   temple = new Temple()
   item = new Item('wood', innerWidth/2-100, innerHeight/2-150)
@@ -41,6 +42,26 @@ function collision(obj1,obj2) {
     obj1.y + obj1.h > obj2.y
 }
 
+function ritual(items, add) {
+  items = items.split("-");
+  for (i = 0; i < items.length; i++) {
+    player.inv[items[i]] -= 1
+    console.log(player.inv)
+  }
+  if (balk.ss < 0) {
+    balk.ss = 0
+  } else {
+    balk.ss -= add;
+  }
+}
+
+function keyReleased() {
+  if (key == "p" && collision(player, temple)) {
+    ritual("plant-water", 5)
+  }
+  return false;
+}
+
 class Player{
   constructor(x, y, w, h, sx, sy){
     this.inv = {
@@ -49,6 +70,9 @@ class Player{
       "animal skin": 0,
       "hay": 0,
       "blood": 0,
+      "plant": 0,
+      "water": 0
+      "fles": false
     };
     this.x = x;
     this.y = y;
@@ -88,6 +112,9 @@ class Player{
     if (keyIsDown(81)) {
 
     }
+  }
+  itemCollect() {
+
   }
 }
 
@@ -183,6 +210,6 @@ class Temple {
 
   draw() {
     noFill()
-    rect(this.x, this.y, this.w, this.h)
+    image(templeImg, this.x, this.y, this.w, this.h)
   }
 }
