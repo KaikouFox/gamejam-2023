@@ -5,16 +5,20 @@ let templeImg
 var col = 255;
 var item;
 var items = [];
-
+var itemTypes = ["wood","stone","animal skin","hay","blood","plant","water"];
 let temple;
 
 function preload() {
   img = loadImage('player.jpg');
+  templeImg = loadImage('temple.jpg')
   wood = loadImage('wood.png');
   stone = loadImage('granite.png')
   animal_skin = loadImage('leather.png');
   hay = loadImage('hay.png');
   blood = loadImage('blood.png');
+  plant = loadImage('plant.png');
+  water = loadImage('water.png');
+  fles  = loadImage('wine.png');
 }
 
 function setup() {
@@ -22,9 +26,8 @@ function setup() {
   player = new Player(innerWidth/2-150, innerHeight/2-197, 300/15, 394/15, 2, 2);
   balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.0001);
   temple = new Temple()
-  item = new Item('wood', innerWidth/2-100, innerHeight/2-150)
-  items.push(item);
   frameRate(60);
+  setInterval(Spawn_random_items,random(800,1600));
 }
 
 function draw() {
@@ -32,7 +35,10 @@ function draw() {
   temple.draw()
   player.update()
   balk.update()
-  item.update()
+  for (var i = 0; i < items.length; i++){
+    item = items[i];
+    item.update()
+  }
 }
 
 function collision(obj1,obj2) {
@@ -41,6 +47,10 @@ function collision(obj1,obj2) {
     obj1.y < obj2.y + obj2.h &&
     obj1.y + obj1.h > obj2.y
 }
+function Spawn_random_items(){
+    item = new Item(itemTypes[Math.floor(Math.random()*6)],Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50);
+    items.push(item);
+  }
 
 function ritual(items, add) {
   items = items.split("-");
@@ -71,7 +81,7 @@ class Player{
       "hay": 0,
       "blood": 0,
       "plant": 0,
-      "water": 0
+      "water": 0,
       "fles": false
     };
     this.x = x;
@@ -110,11 +120,7 @@ class Player{
   }
   doRitual() {
     if (keyIsDown(81)) {
-
     }
-  }
-  itemCollect() {
-
   }
 }
 
@@ -175,6 +181,15 @@ class Item {
     else if (type=="blood") {
       this.ap = blood;
     }
+    else if (type=="plant") {
+      this.ap = plant;
+    }
+    else if (type=="water") {
+      this.ap = water;
+    }
+    else if (type=="fles") {
+      this.ap = fles;
+    }
     this.x = x;
     this.y = y;
     this.w = 512/20;
@@ -185,12 +200,14 @@ class Item {
     image(this.ap, this.x, this.y, this.w, this.h);
   }
   itemCollect() {
-    for (var i = 0; i < items.length; i++){
-      item = items[i]
       if (collision(player,item)){
-        player.inv[item.type]++;
-        item.remove()
-        console.log(player.inv);
+        for (var i = 0; i < items.length; i++){
+          item = items[i];
+          if (item.x == this.x && item.y == this.y){
+            player.inv[item.type]++;
+            items.splice(i, 1)
+            console.log(player.inv);
+        }
       }
     }
   }
@@ -210,6 +227,6 @@ class Temple {
 
   draw() {
     noFill()
-    image(templeImg, this.x, this.y, this.w, this.h)
+    image(templeImg, this.x, this.y, this.w, this.h);
   }
 }
