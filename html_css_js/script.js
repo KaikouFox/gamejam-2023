@@ -8,7 +8,7 @@ var item;
 var items = [];
 var itemTypes = ["wood","stone","animal skin","hay","blood","plant","water","fles"];
 let temple;
-let fles_item;
+var bos = [];
 
 function preload() {
   img = loadImage('player.png');
@@ -21,6 +21,7 @@ function preload() {
   plant = loadImage('plant.png');
   water = loadImage('water.png');
   fles  = loadImage('wine.png');
+  boom = loadImage('boom.png')
 }
 
 function setup() {
@@ -28,9 +29,12 @@ function setup() {
   player = new Player(innerWidth/2-150, innerHeight/2-197, 32/1.5, 32/1.5, 2, 2);
   balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.0001);
   temple = new Temple()
-  fles_item = new Item(7,Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50);
   frameRate(60);
-  setInterval(Spawn_random_items,random(800,1600));
+  setInterval(Spawn_random_items,random(3000,6000));
+  for (i=0;i<9;i++) {
+    oak = new Boom(Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50)
+    bos.push(oak);
+  }
 }
 
 function draw() {
@@ -41,6 +45,10 @@ function draw() {
   for (var i = 0; i < items.length; i++){
     item = items[i];
     item.update()
+  }
+  for (i=0;i<9;i++) {
+    oak=bos[i];
+    oak.draw();
   }
 }
 
@@ -93,7 +101,7 @@ class Player{
       "blood": 0,
       "plant": 0,
       "water": 0,
-      "fles": false
+      "fles": true,
     };
     this.x = x;
     this.y = y;
@@ -240,5 +248,17 @@ class Temple {
   draw() {
     noFill()
     image(templeImg, this.x, this.y, this.w, this.h);
+  }
+}
+
+class Boom {
+  constructor(x,y) {
+    this.x = x;
+    this.y = y;
+    this.w = 512/10;
+    this.h = 512/10;
+  }
+  draw() {
+    image(boom, this.x, this.y, this.w, this.h);
   }
 }
