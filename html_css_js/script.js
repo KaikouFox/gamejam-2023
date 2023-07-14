@@ -2,17 +2,27 @@ let player;
 let balk;
 let img;
 var col = 255;
+var item;
+var items = [];
+
 let temple;
 
 function preload() {
   img = loadImage('player.jpg');
+  wood = loadImage('wood.png');
+  stone = loadImage('granite.png')
+  animal_skin = loadImage('leather.png');
+  hay = loadImage('hay.png');
+  blood = loadImage('blood.png');
 }
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
-  player = new Player(innerWidth/2-150, innerHeight/2-197, 300/20, 394/20, 10, 2, 2);
+  player = new Player(innerWidth/2-150, innerHeight/2-197, 300/20, 394/20, 2, 2);
   balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.0001);
   temple = new Temple()
+  item = new Item('wood', innerWidth/2-100, innerHeight/2-150)
+  items.push(item);
   frameRate(60);
 }
 
@@ -21,6 +31,7 @@ function draw() {
   temple.draw()
   player.update()
   balk.update()
+  item.update()
 }
 
 function collision(obj1,obj2) {
@@ -73,18 +84,11 @@ class Player{
       this.y += this.sy;
     }
   }
-  itemCollect() {
-
-  }
   doRitual() {
     if (keyIsDown(81)) {
 
     }
   }
-  update() {
-    this.move();
-    this.draw();
-    }
 }
 
 class TimeBalk {
@@ -129,8 +133,43 @@ class TimeBalk {
 class Item {
   constructor(type,x, y) {
     this.type = type;
+    if (type=="wood") {
+      this.ap = wood;
+    }
+    else if (type=="stone") {
+      this.ap = stone;
+    }
+    else if (type=="animal skin") {
+      this.ap = animal_skin;
+    }
+    else if (type=="hay") {
+      this.ap = hay;
+    }
+    else if (type=="blood") {
+      this.ap = blood;
+    }
     this.x = x;
     this.y = y;
+    this.w = 512/20;
+    this.h = 512/20;
+  }
+
+  draw() {
+    image(this.ap, this.x, this.y, this.w, this.h);
+  }
+  itemCollect() {
+    for (var i = 0; i < items.length; i++){
+      item = items[i]
+      if (collision(player,item)){
+        player.inv[item.type]++;
+        item.remove()
+        console.log(player.inv);
+      }
+    }
+  }
+  update() {
+    this.draw()
+    this.itemCollect()
   }
 }
 
