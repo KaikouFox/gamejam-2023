@@ -10,6 +10,7 @@ var itemTypes = ["wood","stone","animal skin","hay","blood","plant","water","fle
 let temple;
 let fles_item;
 let ui = true;
+var bos = [];
 
 function preload() {
   img = loadImage('player.png');
@@ -22,6 +23,7 @@ function preload() {
   plant = loadImage('plant.png');
   water = loadImage('water.png');
   fles  = loadImage('wine.png');
+  boom = loadImage('boom.png')
 }
 
 function setup() {
@@ -29,9 +31,12 @@ function setup() {
   player = new Player(innerWidth/2-150, innerHeight/2-197, 32/1.5, 32/1.5, 2, 2);
   balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.0001);
   temple = new Temple()
-  fles_item = new Item(7,Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50);
   frameRate(60);
-  setInterval(Spawn_random_items,random(800,1600));
+  setInterval(Spawn_random_items,random(3000,6000));
+  for (i=0;i<9;i++) {
+    oak = new Boom(Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50)
+    bos.push(oak);
+  }
 }
 
 function draw() {
@@ -44,6 +49,10 @@ function draw() {
   }
   balk.update()
   document.getElementById("uibutton").onclick = function () { if (ui == false) {ui = true} else {ui = false} };
+  for (i=0;i<9;i++) {
+    oak=bos[i];
+    oak.draw();
+  }
 }
 
 function collision(obj1,obj2) {
@@ -257,5 +266,17 @@ class Temple {
   draw() {
     noFill()
     image(templeImg, this.x, this.y, this.w, this.h);
+  }
+}
+
+class Boom {
+  constructor(x,y) {
+    this.x = x;
+    this.y = y;
+    this.w = 512/10;
+    this.h = 512/10;
+  }
+  draw() {
+    image(boom, this.x, this.y, this.w, this.h);
   }
 }
