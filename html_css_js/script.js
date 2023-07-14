@@ -2,7 +2,7 @@ let player;
 let balk;
 let img;
 var col = 255;
-
+let temple;
 
 function preload() {
   img = loadImage('player.jpg');
@@ -10,15 +10,24 @@ function preload() {
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
-  player = new Player(innerWidth/2-150, innerHeight/2-197, 300/20, 394/20, 10, 2, 2)
-  balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.1)
-  frameRate(60)
+  player = new Player(innerWidth/2-150, innerHeight/2-197, 300/20, 394/20, 10, 2, 2);
+  balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.0001);
+  temple = new Temple()
+  frameRate(60);
 }
 
 function draw() {
   background(255)
+  temple.draw()
   player.update()
   balk.update()
+}
+
+function collision(obj1,obj2) {
+  return obj1.x < obj2.x + obj2.w &&
+    obj1.x + obj1.w > obj2.x &&
+    obj1.y < obj2.y + obj2.h &&
+    obj1.y + obj1.h > obj2.y
 }
 
 class Player{
@@ -67,6 +76,11 @@ class Player{
   itemCollect() {
 
   }
+  doRitual() {
+    if (keyIsDown(81)) {
+
+    }
+  }
   update() {
     this.move();
     this.draw();
@@ -87,7 +101,7 @@ class TimeBalk {
   update() {
     this.draw()
     if (this.s != 0) {this.changeSpeed()}
-    this.checkForDeath()
+    this.checkForDeath();
   }
 
   draw() {
@@ -98,7 +112,11 @@ class TimeBalk {
   }
 
   changeSpeed() {
-    this.ss = this.ss + this.s
+    this.ss = this.ss + this.s;
+  }
+
+  accelerate() {
+    this.s += this.s * this.a;
   }
 
   checkForDeath() {
@@ -113,5 +131,19 @@ class Item {
     this.type = type;
     this.x = x;
     this.y = y;
+  }
+}
+
+class Temple {
+  constructor() {
+    this.x = innerWidth/2-50;
+    this.y = innerHeight/2-50;
+    this.w = 100;
+    this.h = 100;
+  }
+
+  draw() {
+    noFill()
+    rect(this.x, this.y, this.w, this.h)
   }
 }
