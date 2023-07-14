@@ -10,7 +10,7 @@ var items = [];
 var itemTypes = ["wood","stone","animal_skin","hay","blood","plant","water","fles"];
 let temple;
 var bos = [];
-var time = [];
+let time = 0;
 
 function preload() {
   console.log(innerWidth)
@@ -35,7 +35,7 @@ function setup() {
   temple = new Temple()
   frameRate(60);
   setInterval(Spawn_random_items,random(1000,2000));
-  setInterval(timer)
+  setInterval(timer,100)
   for (i=0;i<9;i++) {
     oak = new Boom(Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50)
     bos.push(oak);
@@ -43,7 +43,8 @@ function setup() {
 }
 
 function timer() {
-  time++;
+  time= time+0.1;
+  time = Math.round(time * 10) / 10;
   return time;
 }
 
@@ -138,6 +139,7 @@ class Player{
     text("Give totem: wood + stone + blood Key: l", 10, 100 + 32 * 12)
     text("Give doll: wood + skin + hay Key: o", 10, 100 + 32 * 13)
     text("Make fire: wood + stone (at least 3) Key: i", 10, 100 + 32 * 14)
+    text(time.toString(), 10, 100 + 32 * 15)
   }
   }
 
@@ -203,12 +205,15 @@ class TimeBalk {
 
   checkForDeath() {
     if (this.w-this.x/2 <= this.ss) {
-      this.ss = this.w-this.x/2
+      const endtime = time;
+      this.ss = this.w-this.x/2;
       textSize(128);
       fill(255, 0, 0);
       textAlign(CENTER, CENTER);
       textStyle(BOLD);
       text("You DIED", innerWidth/2, innerHeight/2);
+      text("Your score:"+endtime.toString(),innerWidth/2,innerHeight/2+70);
+      noLoop();
     }
   }
 }
