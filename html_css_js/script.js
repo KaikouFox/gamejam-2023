@@ -1,6 +1,7 @@
 let player;
 let balk;
 let img;
+let img2;
 let templeImg
 var col = 255;
 var item;
@@ -9,8 +10,8 @@ var itemTypes = ["wood","stone","animal skin","hay","blood","plant","water"];
 let temple;
 
 function preload() {
-  img = loadImage('player.jpg');
-  templeImg = loadImage('temple.jpg')
+  img = loadImage('player.png');
+  templeImg = loadImage('temple.png')
   wood = loadImage('wood.png');
   stone = loadImage('granite.png')
   animal_skin = loadImage('leather.png');
@@ -23,7 +24,7 @@ function preload() {
 
 function setup() {
   createCanvas(innerWidth, innerHeight);
-  player = new Player(innerWidth/2-150, innerHeight/2-197, 300/15, 394/15, 2, 2);
+  player = new Player(innerWidth/2-150, innerHeight/2-197, 32/1.5, 32/1.5, 2, 2);
   balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.0001);
   temple = new Temple()
   frameRate(60);
@@ -66,8 +67,16 @@ function ritual(items, add) {
 }
 
 function keyReleased() {
-  if (key == "p" && collision(player, temple)) {
-    ritual("plant-water", 5)
+  if (key == "p" && collision(player, temple) && player.inv["plant"] > 0 && player.inv["plant"] > 0 && player.inv["fles"]) {
+    ritual("plant-water", 30)
+  } else if (key == "k" && collision(player, temple) && player.inv["animal_skin"] > 0 && player.inv["blood"] > 0) {
+    ritual("animal_skin-blood", 50)
+  } else if (key == "l" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 0 && player.inv["blood"] > 0) {
+    ritual("animal wood-stone-blood", 50)
+  }  else if (key == "o" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["animal_skin"] > 0 && player.inv[""]) {
+    ritual("animal skin-blood", 50)
+  } else if (key == "i" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 2) {
+    ritual("animal skin-blood", 50)
   }
   return false;
 }
@@ -77,8 +86,8 @@ class Player{
     this.inv = {
       "wood": 0,
       "stone": 0,
-      "animal skin": 0,
-      "hay": 0,
+      "animal_skin": 0,
+      "hay":  0,
       "blood": 0,
       "plant": 0,
       "water": 0,
@@ -118,10 +127,6 @@ class Player{
       this.y += this.sy;
     }
   }
-  doRitual() {
-    if (keyIsDown(81)) {
-    }
-  }
 }
 
 class TimeBalk {
@@ -159,6 +164,11 @@ class TimeBalk {
   checkForDeath() {
     if (this.w-this.x/2 <= this.ss) {
       this.ss = this.w-this.x/2
+      textSize(128);
+      fill(255, 0, 0);
+      textAlign(CENTER, CENTER);
+      textStyle(BOLD);
+      text("You DIED", innerWidth/2, innerHeight/2);
     }
   }
 }
@@ -222,7 +232,7 @@ class Temple {
     this.x = innerWidth/2-50;
     this.y = innerHeight/2-50;
     this.w = 100;
-    this.h = 100;
+    this.h = 84.375;
   }
 
   draw() {
