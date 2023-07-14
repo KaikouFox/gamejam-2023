@@ -93,11 +93,11 @@ function keyReleased() {
   } else if (key == "k" && collision(player, temple) && player.inv["animal_skin"] > 0 && player.inv["blood"] > 0) {
     ritual("animal_skin-blood", 50)
   } else if (key == "l" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 0 && player.inv["blood"] > 0) {
-    ritual("animal wood-stone-blood", 50)
-  }  else if (key == "o" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["animal_skin"] > 0 && player.inv[""]) {
-    ritual("animal skin-blood", 50)
+    ritual("wood-stone-blood", 50)
+  }  else if (key == "o" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["animal_skin"] > 0 && player.inv["hay"]) {
+    ritual("wood-animal_skin-hay", 50)
   } else if (key == "i" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 2) {
-    ritual("animal skin-blood", 50)
+    ritual("wood-stone", 50)
   }
   return false;
 }
