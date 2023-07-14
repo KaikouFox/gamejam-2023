@@ -8,6 +8,8 @@ var item;
 var items = [];
 var itemTypes = ["wood","stone","animal skin","hay","blood","plant","water","fles"];
 let temple;
+let fles_item;
+let ui = true;
 var bos = [];
 var timer = 0;
 
@@ -44,11 +46,12 @@ function draw() {
   background(255)
   temple.draw()
   player.update()
-  balk.update()
   for (var i = 0; i < items.length; i++){
     item = items[i];
     item.update()
   }
+  balk.update()
+  document.getElementById("uibutton").onclick = function () { if (ui == false) {ui = true} else {ui = false} };
   for (i=0;i<9;i++) {
     oak=bos[i];
     oak.draw();
@@ -85,11 +88,11 @@ function keyReleased() {
   } else if (key == "k" && collision(player, temple) && player.inv["animal_skin"] > 0 && player.inv["blood"] > 0) {
     ritual("animal_skin-blood", 50)
   } else if (key == "l" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 0 && player.inv["blood"] > 0) {
-    ritual("animal wood-stone-blood", 50)
-  }  else if (key == "o" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["animal_skin"] > 0 && player.inv[""]) {
-    ritual("animal skin-blood", 50)
+    ritual("wood-stone-blood", 50)
+  }  else if (key == "o" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["animal_skin"] > 0 && player.inv["hay"]) {
+    ritual("wood-animal_skin-hay", 50)
   } else if (key == "i" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 2) {
-    ritual("animal skin-blood", 50)
+    ritual("wood-stone", 50)
   }
   return false;
 }
@@ -116,6 +119,21 @@ class Player{
 
   draw() {
     image(img, this.x, this.y, this.w, this.h);
+    if (ui == true) {
+    let keys = Object.keys(this.inv);
+    textSize(32);
+    fill(0);
+    for (var i = 0; i < 8; i++) {
+      var t = keys[i]+": "+this.inv[keys[i]]
+      text(t.toString(), 10, 100 + i * 32)
+    }
+    text("Rituals:", 10, 100 + 32 * 9)
+    text("Give drink: water + plant Key: p", 10, 100 + 32 * 10)
+    text("Give dead animals: skin + blood Key: k", 10, 100 + 32 * 11)
+    text("Give totem: wood + stone + blood Key: l", 10, 100 + 32 * 12)
+    text("Give doll: wood + skin + hay Key: o", 10, 100 + 32 * 13)
+    text("Make fire: wood + stone (at least 3) Key: i", 10, 100 + 32 * 14)
+  }
   }
 
   update() {
