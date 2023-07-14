@@ -25,7 +25,12 @@ function preload() {
   plant = loadImage('plant.png');
   water = loadImage('water.png');
   fles  = loadImage('wine.png');
-  boom = loadImage('boom.png')
+  drinkOffer = loadImage('drinkOffer.png');
+  dierOffer = loadImage('dierOffer.png');
+  dollOffer = loadImage('dollOffer.png');
+  totemOffer = loadImage('totemOffer.png');
+  fireRitual  = loadImage('fireRitual.png');
+  boom = loadImage('boom.png');
 }
 
 function setup() {
@@ -90,6 +95,7 @@ function ritual(items, add) {
 function keyReleased() {
   if (key == "p" && collision(player, temple) && player.inv["plant"] > 0 && player.inv["water"] > 0 && player.inv["fles"]) {
     ritual("plant-water", 30)
+    player.ritual(drinkOffer)
   } else if (key == "k" && collision(player, temple) && player.inv["animal_skin"] > 0 && player.inv["blood"] > 0) {
     ritual("animal_skin-blood", 50)
   } else if (key == "l" && collision(player, temple) && player.inv["wood"] > 0 && player.inv["stone"] > 0 && player.inv["blood"] > 0) {
@@ -110,8 +116,8 @@ class Player{
       "animal_skin": 0,
       "hay":  0,
       "blood": 0,
-      "plant": 0,
-      "water": 0,
+      "plant": 10,
+      "water": 10,
       "fles": true,
     };
     this.x = x;
@@ -144,6 +150,10 @@ class Player{
   update() {
     if (balk.w-balk.x/2 > balk.ss) {this.move();}
     this.draw();
+  }
+
+  ritualCircle() {
+    image(drinkOffer, player.x-30, player.y-30)
   }
 
   move() {
