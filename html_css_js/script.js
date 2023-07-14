@@ -9,8 +9,11 @@ var items = [];
 var itemTypes = ["wood","stone","animal skin","hay","blood","plant","water","fles"];
 let temple;
 var bos = [];
+var timer = 0;
 
 function preload() {
+  console.log(innerWidth)
+    console.log(innerHeight)
   img = loadImage('player.png');
   templeImg = loadImage('temple.png')
   wood = loadImage('wood.png');
@@ -27,10 +30,10 @@ function preload() {
 function setup() {
   createCanvas(innerWidth, innerHeight);
   player = new Player(innerWidth/2-150, innerHeight/2-197, 32/1.5, 32/1.5, 2, 2);
-  balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.1, 1.0001);
+  balk = new TimeBalk(innerWidth/16, 20, innerWidth-innerWidth/8, 50, 1, 0.25, 1.0001);
   temple = new Temple()
   frameRate(60);
-  setInterval(Spawn_random_items,random(3000,6000));
+  setInterval(Spawn_random_items,random(1500,3000));
   for (i=0;i<9;i++) {
     oak = new Boom(Math.floor(Math.random()*innerWidth),Math.floor(Math.random()*innerHeight)+50)
     bos.push(oak);
@@ -121,20 +124,24 @@ class Player{
   }
 
   move() {
-    if (keyIsDown(65)) {
+    if (keyIsDown(65) && this.x > 0) {
       this.x -= this.sx;
+      console.log(this.x)
     }
 
-    if (keyIsDown(68)) {
+    if (keyIsDown(68) && this.x < innerWidth) {
       this.x += this.sx;
+      console.log(this.x)
     }
 
-    if (keyIsDown(87)) {
+    if (keyIsDown(87) && this.y > 0) {
       this.y -= this.sy;
+      console.log(this.y)
     }
 
-    if (keyIsDown(83)) {
+    if (keyIsDown(83) && this.y < innerHeight) {
       this.y += this.sy;
+      console.log(this.y)
     }
   }
 }
