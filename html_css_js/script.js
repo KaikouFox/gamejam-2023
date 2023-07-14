@@ -2,6 +2,7 @@ let player;
 let balk;
 let img;
 let img2;
+let ui = true;
 let templeImg
 var col = 255;
 var item;
@@ -59,6 +60,7 @@ function draw() {
     oak=bos[i];
     oak.draw();
   }
+  document.getElementById("uibutton").onclick = function () { if (ui == false) {ui = true} else {ui = false} };
 }
 
 function collision(obj1,obj2) {
