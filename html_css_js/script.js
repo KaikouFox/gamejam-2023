@@ -122,6 +122,21 @@ class Player{
 
   draw() {
     image(img, this.x, this.y, this.w, this.h);
+    if (ui == true) {
+    let keys = Object.keys(this.inv);
+    textSize(32);
+    fill(0);
+    for (var i = 0; i < 8; i++) {
+      var t = keys[i]+": "+this.inv[keys[i]]
+      text(t.toString(), 10, 100 + i * 32)
+    }
+    text("Rituals:", 10, 100 + 32 * 9)
+    text("Give drink: water + plant Key: p", 10, 100 + 32 * 10)
+    text("Give dead animals: skin + blood Key: k", 10, 100 + 32 * 11)
+    text("Give totem: wood + stone + blood Key: l", 10, 100 + 32 * 12)
+    text("Give doll: wood + skin + hay Key: o", 10, 100 + 32 * 13)
+    text("Make fire: wood + stone (at least 3) Key: i", 10, 100 + 32 * 14)
+  }
   }
 
   update() {
